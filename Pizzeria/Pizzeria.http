@@ -4,3 +4,10 @@ GET {{Pizzeria_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+POST {{Pizzeria_HostAddress}}/auth/login/
+Accept: application/json
+
+email=
+
+

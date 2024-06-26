@@ -22,7 +22,15 @@ namespace Pizzeria.Data
                         FirstName = "adminFirstName",
                         LastName = "adminSurname",
                         Password = "Qwerty1@",
-                        Role = Model.RoleEnum.ADMIN
+                        Phone = "123123123",
+                        Role = Model.RoleEnum.ADMIN,
+                        Address = new Model.Address ()
+                        {
+                            City = "Warszawa",
+                            FirstLine = "dsa",
+                            SecondLine = "dsa",
+                            Zipcode = "123"
+                        }
                     }
 
                 );

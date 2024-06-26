@@ -40,10 +40,10 @@ namespace Pizzeria
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = false,
+                    ValidateIssuerSigningKey = false,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("qD3zq5CnH9vZfL0ZRQkZkDyxFbLz9WyKFesT9yXpbNs=\r\n"))
                 };
             });
@@ -69,6 +69,10 @@ namespace Pizzeria
             builder.Services.AddSingleton(new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<NewUserDtoReq, User>();
+                cfg.CreateMap<NewAddressDto, Address>();
+                cfg.CreateMap<User, UserShowDataDto>()
+                    .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Address));
+                cfg.CreateMap<Address, Address>();
             }));
 
 
@@ -77,6 +81,7 @@ namespace Pizzeria
             builder.Services.AddScoped<UserService>();
             builder.Services.AddScoped<JWTauthService>();
 
+            builder.Services.AddScoped<AddressService>();
 
             var app = builder.Build();
 

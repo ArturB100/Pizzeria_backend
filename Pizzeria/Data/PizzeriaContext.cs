@@ -10,5 +10,6 @@ namespace Pizzeria.Data
         }
 
         public DbSet<Pizzeria.Model.User> User { get; set; }
+        public DbSet<Pizzeria.Model.Address> Address { get; set; }
     }
 }

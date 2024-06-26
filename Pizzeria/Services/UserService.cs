@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Pizzeria.Data;
 using Pizzeria.Dto;
 using Pizzeria.Model;
@@ -58,6 +59,19 @@ namespace Pizzeria.Services
             return result;
         }
 
+        public void AssignAddressToUser (Address address, User user)
+        {
+            user.Address = address;
+            _context.SaveChanges();
+        }
+
+        public Address? GetAddressOfUser (User user)
+        {
+            return _context.User
+                .Include(u => u.Address)
+                .FirstOrDefault(u  => u.Id == user.Id)
+                .Address;   
+        }
       
     }
 }

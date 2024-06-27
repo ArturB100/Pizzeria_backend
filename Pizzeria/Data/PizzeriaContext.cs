@@ -11,5 +11,7 @@ namespace Pizzeria.Data
 
         public DbSet<Pizzeria.Model.User> User { get; set; }
         public DbSet<Pizzeria.Model.Address> Address { get; set; }
+        public DbSet<Pizzeria.Model.Pizza> Pizza { get; set; }
+        public DbSet<Pizzeria.Model.Ingredient> Ingredient{ get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Pizzeria.Model;
 
 namespace Pizzeria.Data
 {
@@ -33,6 +34,33 @@ namespace Pizzeria.Data
                         }
                     }
 
+                );
+
+                List<Ingredient> ingredients = new List<Ingredient>()
+                {
+                    new Model.Ingredient()
+                    {
+                        Name = "Name",
+                        PriceForBig = 15.00M,
+                        PriceForMedium = 10.00M,
+                        PriceForSmall = 5.00M,
+                    }
+                };
+
+                context.Ingredient.AddRange(
+                    ingredients   
+                );
+
+                context.SaveChanges();
+
+                context.Pizza.AddRange(
+                    new Model.Pizza ()
+                    {
+                        CreatedByUser = false,
+                        Ingredients = new List<Ingredient> { ingredients[0] },
+                        Name = "hawajska",
+                        
+                    }
                 );
 
                 context.SaveChanges();

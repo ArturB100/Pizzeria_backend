@@ -49,18 +49,6 @@ namespace Pizzeria
             });
 
 
-            /*IServiceCollection services = builder.Services;
-            builder.Services.AddAutoMapper(typeof(Program));
-
-            var configuration = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<Foo, FooDto>();
-                cfg.CreateMap<Bar, BarDto>();
-            });
-
-            var mapper = configuration.CreateMapper();*/
-
-
 
             // Add AutoMapper as a singleton
             builder.Services.AddSingleton<IMapper>(sp => new Mapper(sp.GetRequiredService<MapperConfiguration>(), sp.GetService));
@@ -82,6 +70,7 @@ namespace Pizzeria
             builder.Services.AddScoped<JWTauthService>();
 
             builder.Services.AddScoped<AddressService>();
+            builder.Services.AddScoped<PizzaService>();
 
             var app = builder.Build();
 

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pizzeria.Data;
 
@@ -11,9 +12,11 @@ using Pizzeria.Data;
 namespace Pizzeria.Migrations
 {
     [DbContext(typeof(PizzeriaContext))]
-    partial class PizzeriaContextModelSnapshot : ModelSnapshot
+    [Migration("20240626151543_PizzaAndIngredient_added")]
+    partial class PizzaAndIngredient_added
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,57 +52,6 @@ namespace Pizzeria.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Address");
-                });
-
-            modelBuilder.Entity("Pizzeria.Model.Ingredient", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("PizzaId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("PriceForBig")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("PriceForMedium")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("PriceForSmall")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PizzaId");
-
-                    b.ToTable("Ingredient");
-                });
-
-            modelBuilder.Entity("Pizzeria.Model.Pizza", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("CreatedByUser")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Pizza");
                 });
 
             modelBuilder.Entity("Pizzeria.Model.User", b =>
@@ -143,13 +95,6 @@ namespace Pizzeria.Migrations
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("Pizzeria.Model.Ingredient", b =>
-                {
-                    b.HasOne("Pizzeria.Model.Pizza", null)
-                        .WithMany("Ingredients")
-                        .HasForeignKey("PizzaId");
-                });
-
             modelBuilder.Entity("Pizzeria.Model.User", b =>
                 {
                     b.HasOne("Pizzeria.Model.Address", "Address")
@@ -157,11 +102,6 @@ namespace Pizzeria.Migrations
                         .HasForeignKey("AddressId");
 
                     b.Navigation("Address");
-                });
-
-            modelBuilder.Entity("Pizzeria.Model.Pizza", b =>
-                {
-                    b.Navigation("Ingredients");
                 });
 #pragma warning restore 612, 618
         }

@@ -61,8 +61,20 @@ namespace Pizzeria
                 cfg.CreateMap<User, UserShowDataDto>()
                     .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Address));
                 cfg.CreateMap<Address, Address>();
+                cfg.CreateMap<Address, Address>();
             }));
 
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("SpecificOriginPolicy",
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:4200") // Specify the allowed host
+                               .AllowAnyHeader()
+                               .AllowAnyMethod();
+                    });
+            });
 
 
             // container IoC
@@ -91,6 +103,7 @@ namespace Pizzeria
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseCors("SpecificOriginPolicy");
 
             app.MapControllers();
 

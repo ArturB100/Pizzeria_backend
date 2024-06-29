@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+using Pizzeria.Dto;
 using Pizzeria.Model;
 using Pizzeria.Services;
+using System.Net;
 
 namespace Pizzeria.Controllers
 {
     [ApiController]
     [Route("pizza")]
-    public class PizzaController
+    public class PizzaController : Controller
     {
         private readonly PizzaService _service;
 
@@ -16,10 +19,26 @@ namespace Pizzeria.Controllers
         }
 
         [HttpGet]
-        public List<Pizza> GetPizzas (int page)
+        [ProducesResponseType(typeof(List<PizzaDto>), (int)HttpStatusCode.OK)]
+        public List<PizzaDto> GetPizzas (int page)
         {
-            List<Pizza> pizzas = _service.GetPizzas(page);
+            List<PizzaDto> pizzas = _service.GetPizzas(page);
             return pizzas;
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetPizza (int id)
+        {
+            try
+            {
+                PizzaDto pizzaDto = _service.GetPizza(id); ;
+                return Ok(pizzaDto);
+            } catch (Exception ex)
+            {
+                return BadRequest();
+            }
+
+            
         }
     }
 }

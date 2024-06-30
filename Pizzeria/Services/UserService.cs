@@ -72,6 +72,10 @@ namespace Pizzeria.Services
                 .FirstOrDefault(u  => u.Id == user.Id)
                 .Address;   
         }
-      
+
+        public List<User> GetUsers()
+        {
+            return _context.User.ToList();
+        }
     }
 }

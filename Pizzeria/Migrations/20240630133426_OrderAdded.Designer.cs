@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pizzeria.Data;
 
@@ -11,9 +12,11 @@ using Pizzeria.Data;
 namespace Pizzeria.Migrations
 {
     [DbContext(typeof(PizzeriaContext))]
-    partial class PizzeriaContextModelSnapshot : ModelSnapshot
+    [Migration("20240630133426_OrderAdded")]
+    partial class OrderAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -97,7 +100,12 @@ namespace Pizzeria.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("PizzaOrderId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("PizzaOrderId");
 
                     b.ToTable("Pizza");
                 });
@@ -182,6 +190,13 @@ namespace Pizzeria.Migrations
                         .HasForeignKey("PizzaId");
                 });
 
+            modelBuilder.Entity("Pizzeria.Model.Pizza", b =>
+                {
+                    b.HasOne("Pizzeria.Model.PizzaOrder", null)
+                        .WithMany("Pizzas")
+                        .HasForeignKey("PizzaOrderId");
+                });
+
             modelBuilder.Entity("Pizzeria.Model.PizzaOrder", b =>
                 {
                     b.HasOne("Pizzeria.Model.Address", "Address")
@@ -213,6 +228,11 @@ namespace Pizzeria.Migrations
             modelBuilder.Entity("Pizzeria.Model.Pizza", b =>
                 {
                     b.Navigation("Ingredients");
+                });
+
+            modelBuilder.Entity("Pizzeria.Model.PizzaOrder", b =>
+                {
+                    b.Navigation("Pizzas");
                 });
 #pragma warning restore 612, 618
         }

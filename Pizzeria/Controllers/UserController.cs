@@ -33,6 +33,12 @@ namespace Pizzeria.Controllers
             var users = _dbContext.User;
             return Ok(users);
         }*/
+        
+        [HttpGet("allUsers")]
+        public List<User> GetUsers()
+        {
+            return _userService.GetUsers();
+        }
 
         [HttpGet]
         [ProducesResponseType(typeof(UserShowDataDto), (int)HttpStatusCode.OK)]
@@ -79,9 +85,5 @@ namespace Pizzeria.Controllers
             return Ok(address);
 
         }
-
-
-
-
     }
 }

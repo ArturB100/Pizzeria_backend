@@ -5,6 +5,7 @@ using Pizzeria.Dto;
 using Pizzeria.Model;
 using Pizzeria.Services;
 using System.Diagnostics;
+using System.Net;
 
 namespace Pizzeria.Controllers
 {
@@ -34,6 +35,7 @@ namespace Pizzeria.Controllers
         }*/
 
         [HttpGet]
+        [ProducesResponseType(typeof(UserShowDataDto), (int)HttpStatusCode.OK)]
         public IActionResult GetLoggedUserData ()
         {
             User user = _jwtService.GetUserFromRequest(HttpContext);
@@ -49,6 +51,7 @@ namespace Pizzeria.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(OperationResult), (int)HttpStatusCode.OK)]
         public IActionResult RegisterNewUser (NewUserDtoReq dto)
         {
             OperationResult results = _userService.RegisterNewUser(dto);

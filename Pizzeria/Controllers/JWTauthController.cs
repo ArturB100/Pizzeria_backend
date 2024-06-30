@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Pizzeria.Model;
 using Pizzeria.Services;
@@ -7,6 +8,7 @@ namespace Pizzeria.Controllers
 {
     [Route("auth")]
     [ApiController]
+    [EnableCors("SpecificOriginPolicy")]
     public class JWTauthController : Controller
     {
      
@@ -31,10 +33,11 @@ namespace Pizzeria.Controllers
             }
 
             int userId = user.Id;
+            string username = user.FirstName;
 
             var token = _JWTauthService.GenerateJwtToken(userId.ToString());
 
-            return Ok(new { token });
+            return Ok(new { token, username });
         }
 
         [HttpGet("testGetId")]

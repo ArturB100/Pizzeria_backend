@@ -83,7 +83,8 @@ namespace Pizzeria
 
             builder.Services.AddScoped<AddressService>();
             builder.Services.AddScoped<PizzaService>();
-
+            builder.Services.AddScoped<IngredientService>();
+            
             var app = builder.Build();
 
             using (var scope = app.Services.CreateScope())

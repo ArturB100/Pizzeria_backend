@@ -38,9 +38,10 @@ namespace Pizzeria.Services
 
         public PizzaDto GetPizza (int id)
         {
-            Pizza pizza = _context.Pizza
-                .Include(p => p.Ingredients)
+            Pizza pizza = _context.Pizza                
                 .FirstOrDefault(p => p.Id == id);
+
+            List<Ingredient> ingredients = _context.Ingredient.Where(i => i.Pizzas.Where(p2 => p2.Id == id).Any()).ToList();
 
             if (pizza == null) throw new NotExistingIdException();
             
@@ -48,10 +49,10 @@ namespace Pizzeria.Services
                 pizza.Id, 
                 pizza.Name, 
                 pizza.CreatedByUser,
-                pizza.Ingredients,
-                10,
-                10,
-                10
+                ingredients,
+                ingredients.Sum(i => i.PriceForSmall),
+                 ingredients.Sum(i => i.PriceForMedium),
+                 ingredients.Sum(i => i.PriceForBig)
             );
 
             return pizzaDto;

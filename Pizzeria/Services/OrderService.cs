@@ -46,7 +46,7 @@ public class OrderService
     {
         OperationResult result = new OperationResult();
         
-        User? user = _context.User.FirstOrDefault(u => u.Id == request.UserId);
+        User? user = _context.User.FirstOrDefault(u => u.Id == userId);
         if (user == null)
         {
             result.Success = false;

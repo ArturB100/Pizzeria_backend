@@ -10,11 +10,11 @@ namespace Pizzeria.Data
             using (var context = new PizzeriaContext (serviceProvider.GetRequiredService<DbContextOptions<PizzeriaContext>>()))
             {
 
-                context.OrderDetails.ExecuteDelete();
+                /*context.OrderDetails.ExecuteDelete();
                 context.PizzaOrder.ExecuteDelete();
                 context.User.ExecuteDelete();
                 context.Ingredient.ExecuteDelete();
-                context.Pizza.ExecuteDelete();
+                context.Pizza.ExecuteDelete();*/
 
                 if (!context.User.Any())
                 {

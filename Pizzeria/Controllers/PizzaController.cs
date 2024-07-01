@@ -14,10 +14,15 @@ namespace Pizzeria.Controllers
     public class PizzaController : ControllerBase
     {
         private readonly PizzaService _service;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
-        public PizzaController (PizzaService service)
+       
+
+        public PizzaController (PizzaService service, IWebHostEnvironment hostingEnvironment)
         {
             _service = service;
+            _hostingEnvironment = hostingEnvironment;
+
         }
 
         [HttpGet]
@@ -53,6 +58,27 @@ namespace Pizzeria.Controllers
             }
 
             
+        }
+        [HttpPost("upload")]
+        async public Task<IActionResult> AssignImageToPizza (IFormFile file)
+        {
+            var filePath = Path.Combine(_hostingEnvironment.WebRootPath, "images");
+
+            if (!Directory.Exists(filePath))
+            {
+                Directory.CreateDirectory(filePath);
+            }
+
+            var uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+            var filePath2 = Path.Combine(filePath, uniqueFileName);
+
+            using (var stream = new FileStream(filePath2, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+            return Ok("dsada");
+
+
         }
     }
 }

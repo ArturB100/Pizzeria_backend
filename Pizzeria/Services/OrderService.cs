@@ -43,40 +43,40 @@ public class OrderService
 
 
     public OperationResult AddOrder(AddOrderRequest request, int userId)
-{
-    OperationResult result = new OperationResult();
-    
-    User? user = _context.User.FirstOrDefault(u => u.Id == userId);
-    if (user == null)
     {
-        result.Success = false;
-        result.Errors.Add(new FieldError() { FieldKey = "userId", ErrorMsg = "Nie ma takiego uzytkownika" });
-    }
-    
-    Address? address = _context.Address.FirstOrDefault(a => a.Id == request.AddressId);
-    if(address == null)
-    {
-        result.Success = false;
-        result.Errors.Add(new FieldError() { FieldKey = "addressId", ErrorMsg = "Nie ma takiego adresu" });
-    }
-    
-    List<OrderDetails> orderDetails = request.Details.Select(d => 
-    {
-        var pizza = _context.Pizza.SingleOrDefault(p => p.Id == d.PizzaId);
-        if (pizza == null) 
+        OperationResult result = new OperationResult();
+        
+        User? user = _context.User.FirstOrDefault(u => u.Id == userId);
+        if (user == null)
         {
-            throw new Exception($"Pizza with id {d.PizzaId} does not exist.");
+            result.Success = false;
+            result.Errors.Add(new FieldError() { FieldKey = "userId", ErrorMsg = "Nie ma takiego uzytkownika" });
         }
         
-        SizeEnum size = (SizeEnum)d.Size;
-        
-        return new OrderDetails()
+        Address? address = _context.Address.FirstOrDefault(a => a.Id == request.AddressId);
+        if(address == null)
         {
-            Pizza = pizza,
-            Size = size,
-            Quantity = d.Quantity
-        };
-    }).ToList();
+            result.Success = false;
+            result.Errors.Add(new FieldError() { FieldKey = "addressId", ErrorMsg = "Nie ma takiego adresu" });
+        }
+        
+        List<OrderDetails> orderDetails = request.Details.Select(d => 
+        {
+            var pizza = _context.Pizza.SingleOrDefault(p => p.Id == d.PizzaId);
+            if (pizza == null) 
+            {
+                throw new Exception($"Pizza with id {d.PizzaId} does not exist.");
+            }
+            
+            SizeEnum size = (SizeEnum)d.Size;
+            
+            return new OrderDetails()
+            {
+                Pizza = pizza,
+                Size = size,
+                Quantity = d.Quantity
+            };
+        }).ToList();
 
     PizzaOrder pizza = new PizzaOrder {
         Address = address,

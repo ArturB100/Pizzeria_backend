@@ -14,9 +14,9 @@ namespace Pizzeria.Data
                      return;
                  }*/
 
-                context.User.ExecuteDelete();
-                context.Ingredient.ExecuteDelete();
-                context.Pizza.ExecuteDelete();
+                // context.User.ExecuteDelete();
+                // context.Ingredient.ExecuteDelete();
+                // context.Pizza.ExecuteDelete();
 
                 context.User.AddRange(
                     new Model.User ()

@@ -4,6 +4,8 @@ using Pizzeria.Data;
 using Pizzeria.Dto;
 using Pizzeria.Model;
 using System.Diagnostics;
+using Microsoft.VisualBasic.CompilerServices;
+using Pizzeria.Config;
 
 
 namespace Pizzeria.Services
@@ -48,10 +50,17 @@ namespace Pizzeria.Services
                 result.Success = false;
                 result.Errors.Add(new FieldError() { FieldKey = "passwordConfirm", ErrorMsg = "Hasła sie nie zgadzaja" });
             }
-
+            
             if (result.Success)
             {
                 User user = _mapper.Map<User>(newUserDto);
+                OperationResult operationResult = MyUtils.ValidateModel(user);
+                
+                if(operationResult.Success == false)
+                {
+                    return operationResult;
+                }
+                
                 _context.Add(user);
                 _context.SaveChanges();
             }

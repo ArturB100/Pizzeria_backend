@@ -38,14 +38,17 @@ namespace Pizzeria.Services
 
         public PizzaDto GetPizza (int id)
         {
-            Pizza pizza = _context.Pizza.FirstOrDefault(p => p.Id == id);
+            Pizza pizza = _context.Pizza
+                .Include(p => p.Ingredients)
+                .FirstOrDefault(p => p.Id == id);
+
             if (pizza == null) throw new NotExistingIdException();
             
             PizzaDto pizzaDto = new PizzaDto(
                 pizza.Id, 
                 pizza.Name, 
                 pizza.CreatedByUser,
-                new List<Ingredient>(),
+                pizza.Ingredients,
                 10,
                 10,
                 10

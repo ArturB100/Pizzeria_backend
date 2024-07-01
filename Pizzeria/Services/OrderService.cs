@@ -28,11 +28,25 @@ public class OrderService
             .ToList();
     }
 
+
+    public List<PizzaOrder> GetOrdersOfUser(int userId)
+    {
+        return _context.PizzaOrder            
+            .Include(p => p.User)
+            .Include(p => p.Address)
+            .Include(p => p.OrderDetails)
+                .ThenInclude(o => o.Pizza)            
+            .Where(p => p.User.Id == userId)
+            .ToList();
+    }
+
+
+
     public OperationResult AddOrder(AddOrderRequest request, int userId)
     {
         OperationResult result = new OperationResult();
         
-        User? user = _context.User.FirstOrDefault(u => u.Id == userId);
+        User? user = _context.User.FirstOrDefault(u => u.Id == request.UserId);
         if (user == null)
         {
             result.Success = false;

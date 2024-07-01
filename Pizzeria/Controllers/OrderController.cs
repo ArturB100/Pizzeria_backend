@@ -12,10 +12,11 @@ namespace Pizzeria.Controllers
     {
         private readonly OrderService _service;
         private readonly JWTauthService _jwtauthService;
-        
-        public OrderController(OrderService service)
+
+        public OrderController(OrderService service, JWTauthService jWTauthService)
         {
             _service = service;
+            _jwtauthService = jWTauthService;
         }
 
         [HttpGet]
@@ -23,6 +24,19 @@ namespace Pizzeria.Controllers
         {
             List<PizzaOrder> orders = _service.GetOrders();
             return orders;
+        }
+
+        [HttpGet("user")]
+        [ProducesResponseType(typeof(List<PizzaOrder>), (int)HttpStatusCode.OK)]
+        public IActionResult GetOrdersOfCurrentLoggedUser ()
+        {
+            int userId = _jwtauthService.GetUserIdFromRequest(HttpContext);
+            if (userId == 0)
+            {
+                return Unauthorized();
+            }
+            var list = _service.GetOrdersOfUser(userId);
+            return Ok(list);
         }
 
         [HttpPost]

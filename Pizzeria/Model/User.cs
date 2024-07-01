@@ -29,6 +29,6 @@ namespace Pizzeria.Model
         [Required(ErrorMessage = "Role is required")]
         public RoleEnum Role { get; set; }
         
-        public Address Address { get; set; }
+        public Address? Address { get; set; }
     }
 }

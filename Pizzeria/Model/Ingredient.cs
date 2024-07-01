@@ -7,5 +7,6 @@
         public decimal PriceForSmall { get; set; }
         public decimal PriceForMedium { get; set; }
         public decimal PriceForBig { get; set; }
+        public List<Pizza> Ingredients { get; set; }
     }
 }

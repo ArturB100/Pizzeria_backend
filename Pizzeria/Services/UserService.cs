@@ -83,5 +83,10 @@ namespace Pizzeria.Services
             return result;
         }
       
+
+        public List<User> GetUsers()
+        {
+            return _context.User.ToList();
+        }
     }
 }

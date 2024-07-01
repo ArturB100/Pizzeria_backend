@@ -8,6 +8,7 @@ using System.Text;
 using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 using Pizzeria.Dto;
+using Pizzeria.Dto.Request;
 using Pizzeria.Model;
 
 namespace Pizzeria
@@ -84,6 +85,7 @@ namespace Pizzeria
             builder.Services.AddScoped<AddressService>();
             builder.Services.AddScoped<PizzaService>();
             builder.Services.AddScoped<IngredientService>();
+            builder.Services.AddScoped<OrderService>();
             
             var app = builder.Build();
 

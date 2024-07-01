@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Net;
+using Microsoft.AspNetCore.Mvc;
 using Pizzeria.Dto.Request;
 using Pizzeria.Model;
 using Pizzeria.Services;
-using System.Net;
 
 namespace Pizzeria.Controllers
 {

@@ -106,6 +106,8 @@ namespace Pizzeria
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseStaticFiles();
+
             app.UseCors("SpecificOriginPolicy");
 
             app.MapControllers();

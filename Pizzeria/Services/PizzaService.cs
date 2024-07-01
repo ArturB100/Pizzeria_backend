@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Pizzeria.Data;
 using Pizzeria.Dto.Request;
@@ -12,11 +13,13 @@ namespace Pizzeria.Services
     {
         private readonly PizzeriaContext _context;
         private readonly IMapper _mapper;   
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
-        public PizzaService (PizzeriaContext context, IMapper mapper)
+        public PizzaService (PizzeriaContext context, IMapper mapper, IWebHostEnvironment hostingEnvironment)
         {
             _context = context;
             _mapper = mapper;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         public List<PizzaDto> GetPizzas (int page)
@@ -57,28 +60,37 @@ namespace Pizzeria.Services
             return pizzaDto;
         }
 
-        public OperationResult AddPizza(AddPizzaRequest request)
+        public int AddPizza(AddPizzaRequest request)
         {
             List<Ingredient> ingredients = _context.Ingredient.Where(i => request.Ingredients.Contains(i.Id)).ToList();
             if (ingredients.Count != request.Ingredients.Count)
             {
-                return new OperationResult { Success = false };
+                return -1;
             }
 
             Pizza pizza = new Pizza { Name = request.Name, Ingredients = ingredients };
             _context.Pizza.Add(pizza);
             _context.SaveChanges();
 
-            if (request.Image.Length > 0)
-            {
-                var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", pizza.Id.ToString());
-                using (var stream = new FileStream(imagePath, FileMode.Create))
-                {
-                    request.Image.CopyTo(stream);
-                }
-            }
+            return pizza.Id;
+        }
 
-            return new OperationResult { Success = true };
+        async public void AddImage(int pizzaId, IFormFile image)
+        {
+            var filePath = Path.Combine(_hostingEnvironment.WebRootPath, "images");
+
+            if (!Directory.Exists(filePath))
+            {
+                Directory.CreateDirectory(filePath);
+            }
+            
+            var uniqueFileName = pizzaId.ToString() + ".jpg";
+            var filePath2 = Path.Combine(filePath, uniqueFileName);
+
+            using (var stream = new FileStream(filePath2, FileMode.Create))
+            {
+                await image.CopyToAsync(stream);
+            }
         }
     }
 }

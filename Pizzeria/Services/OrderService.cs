@@ -43,80 +43,80 @@ public class OrderService
 
 
     public OperationResult AddOrder(AddOrderRequest request, int userId)
+{
+    OperationResult result = new OperationResult();
+    
+    User? user = _context.User.FirstOrDefault(u => u.Id == userId);
+    if (user == null)
     {
-        OperationResult result = new OperationResult();
-        
-        User? user = _context.User.FirstOrDefault(u => u.Id == request.UserId);
-        if (user == null)
+        result.Success = false;
+        result.Errors.Add(new FieldError() { FieldKey = "userId", ErrorMsg = "Nie ma takiego uzytkownika" });
+    }
+    
+    Address? address = _context.Address.FirstOrDefault(a => a.Id == request.AddressId);
+    if(address == null)
+    {
+        result.Success = false;
+        result.Errors.Add(new FieldError() { FieldKey = "addressId", ErrorMsg = "Nie ma takiego adresu" });
+    }
+    
+    List<OrderDetails> orderDetails = request.Details.Select(d => 
+    {
+        var pizza = _context.Pizza.SingleOrDefault(p => p.Id == d.PizzaId);
+        if (pizza == null) 
         {
-            result.Success = false;
-            result.Errors.Add(new FieldError() { FieldKey = "userId", ErrorMsg = "Nie ma takiego uzytkownika" });
+            throw new Exception($"Pizza with id {d.PizzaId} does not exist.");
         }
         
-        Address? address = _context.Address.FirstOrDefault(a => a.Id == request.AddressId);
-        if(address == null)
-        {
-            result.Success = false;
-            result.Errors.Add(new FieldError() { FieldKey = "addressId", ErrorMsg = "Nie ma takiego adresu" });
-        }
+        SizeEnum size = (SizeEnum)d.Size;
         
-        List<OrderDetails> orderDetails = request.Details.Select(d => 
+        return new OrderDetails()
         {
-            var pizza = _context.Pizza.SingleOrDefault(p => p.Id == d.PizzaId);
-            if (pizza == null) 
-            {
-                throw new Exception($"Pizza with id {d.PizzaId} does not exist.");
-            }
-            
-            SizeEnum size = (SizeEnum)d.Size;
-            
-            return new OrderDetails()
-            {
-                Pizza = pizza,
-                Size = size,
-                Quantity = d.Quantity
-            };
-        }).ToList();
-
-        PizzaOrder pizza = new PizzaOrder {
-            Address = address,
-            User = user,
-            Status = OrderStatusEnum.InPreparation,
-            OrderDetails = orderDetails,
-            TotalPrice = orderDetails.Sum(od =>
-            {
-                decimal costOfIngredients = od.Pizza.Ingredients.Sum(i =>
-                {
-                    if (od.Size == SizeEnum.Small)
-                    {
-                        return i.PriceForSmall;
-                    }
-                    else if (od.Size == SizeEnum.Medium) 
-                    {
-                        return i.PriceForMedium;
-                    }
-                    else if (od.Size == SizeEnum.Large)
-                    {
-                        return i.PriceForBig;
-                    }
-                    return i.PriceForMedium;
-                });
-
-                return (double)(costOfIngredients * od.Quantity);
-
-            })
+            Pizza = pizza,
+            Size = size,
+            Quantity = d.Quantity
         };
+    }).ToList();
 
-        result = MyUtils.ValidateModel(pizza);
-        if (!result.Success)
+    PizzaOrder pizza = new PizzaOrder {
+        Address = address,
+        User = user,
+        Status = OrderStatusEnum.InPreparation,
+        OrderDetails = orderDetails,
+        TotalPrice = orderDetails.Sum(od =>
         {
-            return result;
-        }
-        _context.PizzaOrder.Add(pizza);
-        _context.SaveChanges();
+            decimal costOfIngredients = od.Pizza.Ingredients.Sum(i =>
+            {
+                if (od.Size == SizeEnum.Small)
+                {
+                    return i.PriceForSmall;
+                }
+                else if (od.Size == SizeEnum.Medium) 
+                {
+                    return i.PriceForMedium;
+                }
+                else if (od.Size == SizeEnum.Large)
+                {
+                    return i.PriceForBig;
+                }
+                return i.PriceForMedium;
+            });
 
+            return (double)(costOfIngredients * od.Quantity);
+
+        })
+    };
+
+    result = MyUtils.ValidateModel(pizza);
+    if (!result.Success)
+    {
         return result;
     }
+    _context.PizzaOrder.Add(pizza);
+    _context.SaveChanges();
+
+    return result;
+}
     
     public OperationResult ChangeOrderStatus(int orderId, OrderStatusEnum newStatus)
     {

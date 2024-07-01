@@ -29,19 +29,17 @@ namespace Pizzeria.Controllers
         }
         
         [HttpPost]
-        public IActionResult AddPizza (AddPizzaRequest request)
+        public int AddPizza (AddPizzaRequest request)
         {
-            OperationResult result = _service.AddPizza(request);
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-            else
-            {
-                return BadRequest(result);
-            }
+            return _service.AddPizza(request);
         }
-
+        
+        [HttpPost("assign-image-to-pizza/{pizzaId}")]
+        public void AssignImageToPizza (int pizzaId, IFormFile image)
+        {
+            _service.AddImage(pizzaId, image);
+        }
+        
         [HttpGet("{id}")]
         public IActionResult GetPizza (int id)
         {

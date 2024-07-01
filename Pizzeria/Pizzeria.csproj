@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <Folder Include="Dto\Response\" />
+    <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
 </Project>

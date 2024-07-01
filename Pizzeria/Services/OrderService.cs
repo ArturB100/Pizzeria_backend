@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Pizzeria.Data;
 using Pizzeria.Dto;
 using Pizzeria.Dto.Request;
@@ -19,7 +21,10 @@ public class OrderService
     
     public List<PizzaOrder> GetOrders()
     {
-        return _context.PizzaOrder.ToList();
+        return _context.PizzaOrder
+            .Include(p => p.User)
+            .Include(p => p.Address)
+            .ToList();
     }
 
     public OperationResult AddOrder(AddOrderRequest request)
@@ -40,7 +45,7 @@ public class OrderService
             result.Errors.Add(new FieldError() { FieldKey = "addressId", ErrorMsg = "Nie ma takiego adresu" });
         }
         
-        List<OrderDetails> details = request.Details.Select(d => 
+        List<OrderDetails> orderDetails = request.Details.Select(d => 
         {
             var pizza = _context.Pizza.SingleOrDefault(p => p.Id == d.PizzaId);
             if (pizza == null) 
@@ -57,6 +62,9 @@ public class OrderService
                 Quantity = d.Quantity
             };
         }).ToList();
+        
+        _context.PizzaOrder.Add(new PizzaOrder { Address = address, User = user, Status = OrderStatusEnum.InPreparation, OrderDetails = orderDetails });
+        _context.SaveChanges();
 
         return result;
     }

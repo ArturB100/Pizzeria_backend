@@ -2,5 +2,5 @@
 
 public enum OrderStatusEnum
 {
-    Received, InPreparation, InDelivery, Delivered
+    InPreparation, InDelivery, Delivered
 }

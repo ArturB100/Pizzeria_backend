@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Net;
+using Microsoft.AspNetCore.Mvc;
 using Pizzeria.Dto.Request;
 using Pizzeria.Model;
 using Pizzeria.Services;
@@ -10,7 +11,8 @@ namespace Pizzeria.Controllers
     public class OrderController : ControllerBase
     {
         private readonly OrderService _service;
-
+        private readonly JWTauthService _jwtauthService;
+        
         public OrderController(OrderService service)
         {
             _service = service;
@@ -24,9 +26,11 @@ namespace Pizzeria.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(OperationResult), (int)HttpStatusCode.OK)]
         public IActionResult AddOrder(AddOrderRequest request)
         {
-            OperationResult result = _service.AddOrder(request);
+            int userId = _jwtauthService.GetUserIdFromRequest(HttpContext);
+            OperationResult result = _service.AddOrder(request, userId);
             if (result.Success)
             {
                 return Ok(result);

@@ -61,10 +61,20 @@ namespace Pizzeria.Services
             {
                 return new OperationResult { Success = false };
             }
-            
+
             Pizza pizza = new Pizza { Name = request.Name, Ingredients = ingredients };
             _context.Pizza.Add(pizza);
             _context.SaveChanges();
+
+            if (request.Image.Length > 0)
+            {
+                var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", pizza.Id.ToString());
+                using (var stream = new FileStream(imagePath, FileMode.Create))
+                {
+                    request.Image.CopyTo(stream);
+                }
+            }
+
             return new OperationResult { Success = true };
         }
     }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Pizzeria.Config;
 using Pizzeria.Data;
 using Pizzeria.Dto;
 using Pizzeria.Dto.Request;
@@ -27,11 +28,11 @@ public class OrderService
             .ToList();
     }
 
-    public OperationResult AddOrder(AddOrderRequest request)
+    public OperationResult AddOrder(AddOrderRequest request, int userId)
     {
         OperationResult result = new OperationResult();
         
-        User? user = _context.User.FirstOrDefault(u => u.Id == request.UserId);
+        User? user = _context.User.FirstOrDefault(u => u.Id == userId);
         if (user == null)
         {
             result.Success = false;
@@ -62,8 +63,42 @@ public class OrderService
                 Quantity = d.Quantity
             };
         }).ToList();
-        
-        _context.PizzaOrder.Add(new PizzaOrder { Address = address, User = user, Status = OrderStatusEnum.InPreparation, OrderDetails = orderDetails });
+
+        PizzaOrder pizza = new PizzaOrder {
+            Address = address,
+            User = user,
+            Status = OrderStatusEnum.InPreparation,
+            OrderDetails = orderDetails,
+            TotalPrice = orderDetails.Sum(od =>
+            {
+                decimal costOfIngredients = od.Pizza.Ingredients.Sum(i =>
+                {
+                    if (od.Size == SizeEnum.Small)
+                    {
+                        return i.PriceForSmall;
+                    }
+                    else if (od.Size == SizeEnum.Medium) 
+                    {
+                        return i.PriceForMedium;
+                    }
+                    else if (od.Size == SizeEnum.Large)
+                    {
+                        return i.PriceForBig;
+                    }
+                    return i.PriceForMedium;
+                });
+
+                return (double)(costOfIngredients * od.Quantity);
+
+            })
+        };
+
+        result = MyUtils.ValidateModel(pizza);
+        if (!result.Success)
+        {
+            return result;
+        }
+        _context.PizzaOrder.Add(pizza);
         _context.SaveChanges();
 
         return result;

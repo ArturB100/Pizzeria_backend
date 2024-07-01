@@ -48,7 +48,7 @@ namespace Pizzeria.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Address");
+                    b.ToTable("Address", (string)null);
                 });
 
             modelBuilder.Entity("Pizzeria.Model.Ingredient", b =>
@@ -79,7 +79,7 @@ namespace Pizzeria.Migrations
 
                     b.HasIndex("PizzaId");
 
-                    b.ToTable("Ingredient");
+                    b.ToTable("Ingredient", (string)null);
                 });
 
             modelBuilder.Entity("Pizzeria.Model.OrderDetails", b =>
@@ -108,7 +108,7 @@ namespace Pizzeria.Migrations
 
                     b.HasIndex("PizzaOrderId");
 
-                    b.ToTable("OrderDetails");
+                    b.ToTable("OrderDetails", (string)null);
                 });
 
             modelBuilder.Entity("Pizzeria.Model.Pizza", b =>
@@ -128,7 +128,7 @@ namespace Pizzeria.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Pizza");
+                    b.ToTable("Pizza", (string)null);
                 });
 
             modelBuilder.Entity("Pizzeria.Model.PizzaOrder", b =>
@@ -157,7 +157,7 @@ namespace Pizzeria.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("PizzaOrder");
+                    b.ToTable("PizzaOrder", (string)null);
                 });
 
             modelBuilder.Entity("Pizzeria.Model.User", b =>
@@ -201,7 +201,7 @@ namespace Pizzeria.Migrations
 
                     b.HasIndex("AddressId");
 
-                    b.ToTable("User");
+                    b.ToTable("User", (string)null);
                 });
 
             modelBuilder.Entity("Pizzeria.Model.Ingredient", b =>

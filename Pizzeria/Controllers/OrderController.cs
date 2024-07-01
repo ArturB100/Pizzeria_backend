@@ -2,6 +2,7 @@
 using Pizzeria.Dto.Request;
 using Pizzeria.Model;
 using Pizzeria.Services;
+using System.Net;
 
 namespace Pizzeria.Controllers
 {
@@ -10,10 +11,12 @@ namespace Pizzeria.Controllers
     public class OrderController : ControllerBase
     {
         private readonly OrderService _service;
+        private readonly JWTauthService _jwtauthService;
 
-        public OrderController(OrderService service)
+        public OrderController(OrderService service, JWTauthService jWTauthService)
         {
             _service = service;
+            _jwtauthService = jWTauthService;
         }
 
         [HttpGet]
@@ -23,10 +26,25 @@ namespace Pizzeria.Controllers
             return orders;
         }
 
+        [HttpGet("user")]
+        [ProducesResponseType(typeof(List<PizzaOrder>), (int)HttpStatusCode.OK)]
+        public IActionResult GetOrdersOfCurrentLoggedUser ()
+        {
+            int userId = _jwtauthService.GetUserIdFromRequest(HttpContext);
+            if (userId == 0)
+            {
+                return Unauthorized();
+            }
+            var list = _service.GetOrdersOfUser(userId);
+            return Ok(list);
+        }
+
         [HttpPost]
+        [ProducesResponseType(typeof(OperationResult), (int)HttpStatusCode.OK)]
         public IActionResult AddOrder(AddOrderRequest request)
         {
-            OperationResult result = _service.AddOrder(request);
+            int userId = _jwtauthService.GetUserIdFromRequest(HttpContext);
+            OperationResult result = _service.AddOrder(request, userId);
             if (result.Success)
             {
                 return Ok(result);

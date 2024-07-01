@@ -82,7 +82,7 @@ namespace Pizzeria.Controllers
 
             Address address = _addressService.AddAddressIfNotExists(dto);
             _userService.AssignAddressToUser(address, user);
-            return Ok(address);
+            return Ok(new OperationResult() { Success = true});
 
         }
 

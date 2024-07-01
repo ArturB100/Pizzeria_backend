@@ -6,7 +6,7 @@ namespace Pizzeria.Config;
 
 public static class MyUtils
 {
-    public static OperationResult ValidateModel(ModelStateDictionary modelState)
+    private static OperationResult ValidateModel(ModelStateDictionary modelState)
     {
         var operationResult = new OperationResult();
 

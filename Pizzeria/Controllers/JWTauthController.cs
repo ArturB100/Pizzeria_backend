@@ -34,10 +34,11 @@ namespace Pizzeria.Controllers
 
             int userId = user.Id;
             string username = user.FirstName;
+            RoleEnum userRole = user.Role;
 
             var token = _JWTauthService.GenerateJwtToken(userId.ToString());
 
-            return Ok(new { token, username });
+            return Ok(new { token, username, userRole });
         }
 
         [HttpGet("testGetId")]

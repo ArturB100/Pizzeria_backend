@@ -36,6 +36,20 @@ namespace Pizzeria.Controllers
                 return BadRequest(result);
             }
         }
+        
+        [HttpPut("{orderId}")]
+        public IActionResult ChangeOrderStatus(int orderId, OrderStatusEnum newStatus)
+        {
+            OperationResult result = _service.ChangeOrderStatus(orderId, newStatus);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(result);
+            }
+        }
     } 
 }
 

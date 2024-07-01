@@ -117,4 +117,22 @@ public class OrderService
 
         return result;
     }
+    
+    public OperationResult ChangeOrderStatus(int orderId, OrderStatusEnum newStatus)
+    {
+        OperationResult result = new OperationResult();
+
+        PizzaOrder? order = _context.PizzaOrder.FirstOrDefault(o => o.Id == orderId);
+        if (order == null)
+        {
+            result.Success = false;
+            result.Errors.Add(new FieldError() { FieldKey = "orderId", ErrorMsg = "Nie ma takiego zamówienia" });
+            return result;
+        }
+
+        order.Status = newStatus;
+        _context.SaveChanges();
+
+        return result;
+    }
 }

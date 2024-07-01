@@ -80,6 +80,24 @@ namespace Pizzeria.Controllers
 
         }
 
+        [HttpPut]
+        public IActionResult UpdateUserData (UpdateUserDataDto dto)
+        {
+            User user = _jwtService.GetUserFromRequest(HttpContext);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+            OperationResult operation =  _userService.UpdateUserData(dto, user);
+            if (operation.Success)
+            {
+                return Ok(operation);
+            } 
+            return BadRequest(operation);
+
+        }
+
+
 
 
 

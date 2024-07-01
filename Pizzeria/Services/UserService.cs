@@ -72,6 +72,16 @@ namespace Pizzeria.Services
                 .FirstOrDefault(u  => u.Id == user.Id)
                 .Address;   
         }
+
+        public OperationResult UpdateUserData (UpdateUserDataDto dto, User user)
+        {
+            OperationResult result = new OperationResult() { Success = true };
+            user.FirstName = dto.FirstName;
+            user.LastName = dto.LastName;
+            user.Phone = dto.Phone;
+            _context.SaveChanges();
+            return result;
+        }
       
     }
 }
